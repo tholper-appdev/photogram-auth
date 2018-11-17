@@ -1,82 +1,120 @@
-<div class="row mb-3">
-  <div class="col-md-12">
-    <h1>
-      All photos
-    </h1>
+    <div class="row">
+  <div class="col-md-8 offset-md-2">
+    <a href="/photos/new" class="btn btn-primary btn-block">
+      <i class="fa fa-fw fa-plus"></i>
 
-    <a href="/photos/new" class="btn btn-block btn-outline-secondary">
-      Add a new photo
+      Add Photo
     </a>
+
+    <hr>
   </div>
 </div>
-
 
 <hr>
 
-<div class="row mb-3">
-  <div class="col-md-12">
-    <table class="table">
-      <tr>
-        <th>
-          ID
-        </th>
+<% @photos.each do |photo| %>
+<div class="row mb-5">
+  <div class="col-md-8 offset-md-2">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">
+          <a href="/users/<% photo.user_id %>"><%= User.find_by(id: photo.user_id).username %></a>
+          <small>
+            <%= time_ago_in_words(photo.created_at) %> ago
+          </small>
+        </h4>
+      </div>
 
-        <th>
-          Caption
-        </th>
+      <div class="card-body">
+        <a href="/photos/<%= photo.id %>">
+          <img src="<%= photo.image %>" class="img-fluid">
+        </a>
 
-        <th>
-          Image
-        </th>
+        <div>
+          <% @likes = Like.where(:photo_id => photo.id) %>
+          <% @likes.each do |like| %>
+              <small>
+                <%= User.find_by(id: like.user_id).username %>
+                likes
+                this
+              </small>
 
-        <th>
-          User
-        </th>
+            <% if like.user_id == current_user.id %>
+            <a href="/delete_like/<%= like.id %>" class="btn btn-link pull-right">
+              <i class="fas fa-heart"></i> Unlike
+            </a>
+            <% end %>
+          <% end %>
+                  
+          <ul class="list-unstyled pt-3">
+            <% @comments = Comment.where(:photo_id => photo.id) %>
+        
+            <% @comments.each do |comment| %>
+              <li class="media mb-2">
+                <div class="media-body">
+                  <h6>
+                    <a href="/users/<%= comment.user_id %>"><%= User.find_by(id: comment.user_id).username %></a>
+                    <br>
+                    <%= time_ago_in_words(comment.created_at) %> ago
+                    <small>
+                      <%= comment.body %>
+                    </small>
+                  </h6>
+                </div> <!-- media-body -->
+              </li>
+           <% end %>
 
-        <th>
-          Created at
-        </th>
+            <li class="media">
+              <div class="media-body">
+                <form action="/create_comment" method="post" class="pt-4">
+                  <!-- Hidden input for authenticity token to protect from forgery -->
+                  <input name="authenticity_token" type="hidden" value="bQoyBDMwRRuzDib5y/n8BGs91jtvpJPrkAS7djUh6d+ddPS+jsuO3AzO/zjH0IJWwjGlqYPhyWvsOIv/t4Cj5w==">
 
-        <th>
-          Updated at
-        </th>
+                  <input type="hidden" name="photo_id" value="<%= photo.id %>">
 
-        <th>
-        </th>
-      </tr>
+                  <input type="hidden" name="user_id" value="<%= current_user.id %>">
 
-      <% @photos.each do |photo| %>
-      <tr>
-        <td>
-          <%= photo.id %>
-        </td>
+                  <!-- Label and input for body -->
+                  <div class="form-group">
+                    <label for="body" class="sr-only">
+                      Body
+                    </label>
 
-        <td>
-          <%= photo.caption %>
-        </td>
+                    <div class="input-group">
+                      <input type="text" id="body" name="body" class="form-control" placeholder="Add a comment..." required>
 
-        <td>
-          <%= photo.image %>
-        </td>
+                      <span class="input-group-append">
+                        <button class="btn btn-primary" type="submit">
+                          <i class="far fa-comment"></i>
 
-        <td>
-          <%= photo.user_id %>
-        </td>
+                          Add Comment
+                        </button>
+                      </span>
+                    </div> <!-- input-group -->
+                  </div>  <!-- form-group -->
+                </form>
+              </div> <!-- media-body -->
+            </li>
+          </ul>
+          
+          <% if photo.user_id == current_user.id %>
+          <div class="btn-group d-flex" role="group">
+                <a href="/photos/<%= photo.id %>/edit" class="btn btn-warning w-100">
+                  <i class="fas fa-edit"></i>
+                  Edit
+                </a>
 
-        <td>
-          <%= time_ago_in_words(photo.created_at) %> ago
-        </td>
-        <td>
-          <%= time_ago_in_words(photo.updated_at) %> ago
-        </td>
+                <a href="/delete_photo/<%= photo.id %>" class="btn btn-danger w-100" rel="nofollow">
+                  <i class="fas fa-trash"></i>
+                  Delete
+                </a>
+          </div> <!-- btn-group btn-group-justified -->
+          <% end %>
+          
+        </div>
+      </div> <!-- card-body -->
+    </div> <!-- card  -->
+  </div> <!-- col-md-8 offset-md-2 -->
+</div> <!-- row -->
+<% end %>   
 
-        <td>
-          <a href="/photos/<%= photo.id %>">
-            Show details
-          </a>
-        </td>
-      </tr>
-      <% end %>
-    </table>
-  </div>
-</div>
