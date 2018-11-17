@@ -7,6 +7,8 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params.fetch("id_to_display"))
+    
+    @photos= Photo.where(:user_id => params.fetch("id_to_display"))
 
     render("users/show.html.erb")
   end

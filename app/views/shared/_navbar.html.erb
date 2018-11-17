@@ -24,7 +24,11 @@
             <a href="/photos" class="dropdown-item">
               Photos
             </a>
-            
+            <% if current_user != nil %>
+            <a href="/users/<%= current_user.id %>" class="dropdown-item">
+              My Wall
+            </a>
+            <% end %>
           </div>
         </li>
       </ul>
@@ -42,11 +46,11 @@
             </a>
           </li>
         <% else %>
-        <li class="nav-item">
-          <a class="nav-link" href="/users">
-            <i class="fas fa-users"></i>
-             <span class="hidden-sm">All Users</span></a>
-        </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/users">
+              <i class="fas fa-users"></i>
+               <span class="hidden-sm">All Users</span></a>
+            </li>
           <li class="nav-item">
             <a href="/users/edit" class="nav-link">
               <%= current_user.username %> 

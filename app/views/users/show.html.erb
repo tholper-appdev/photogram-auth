@@ -4,6 +4,24 @@
       User #<%= @user.id %> details
     </h1>
 
+    <% @photos.each do |photo| %>
+    <div class="card-header">
+        <h4 class="card-title">
+          <small>
+            <%= Photo.find_by(id: photo.id).caption %>
+          </small>
+        </h4>
+    </div>
+      
+    <div class="card-body">
+        <a href="/photos/<%= photo.id %>">
+          
+          <img src="<%= Photo.find_by(id: photo.id).image %>" class="img-fluid">
+        </a>
+        
+    <div>
+    <% end %>
+
   </div>
 </div>
 
