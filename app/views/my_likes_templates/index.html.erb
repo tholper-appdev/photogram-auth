@@ -1,4 +1,3 @@
-  <div class="container">
     <div class="row">
   <div class="col-md-12">
 
@@ -9,7 +8,6 @@
 <hr>
 
 <% @likes.each do |like| %>
-    <div class="card">
       <div class="card-header">
         <h4 class="card-title">
           <a href="/users/<% like.user_id  %>"><%= User.find_by(id: like.user_id).username %></a>
@@ -23,8 +21,9 @@
         <a href="/photos/<%= Photo.find_by(id: like.photo_id).id %>">
           <img src="<%= Photo.find_by(id: like.photo_id).image %>" class="img-fluid">
         </a>
-      <div>
+      </div>
       
+      <div>
       <% if like.user_id == current_user.id %>
       <a href="/delete_like/<%= like.id %>" class="btn btn-link pull-right">
               <i class="fas fa-heart"></i> Unlike
